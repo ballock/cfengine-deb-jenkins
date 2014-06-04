@@ -1,10 +1,11 @@
-README for kamailio-deb-jenkins
+README for cfengine-deb-jenkins
 ===============================
 
 This repository provides configuration and scripts as used by the server
-for building Debian packages for the [Kamailio project](http://www.kamailio.org/).
+for building Debian packages for the [CFEngine3](http://www.cfengine.com/).
 
-Development of this setup is sponsored by [Sipwise](http://www.sipwise.com/).
+This code is a fork off Kamilio project support setup (https://github.com/sipwise/kamailio-deb-jenkins).
+Development of that setup is sponsored by [Sipwise](http://www.sipwise.com/).
 
 
 Involved Software
@@ -39,26 +40,26 @@ Support providing additional configuration to cowbuilder + related tools:
 
 Grab a copy of this repository:
 
-    git clone https://github.com/sipwise/kamailio-deb-jenkins.git /home/admin/kamailio-deb-jenkins
+    git clone https://github.com/ballock/cfengine-deb-jenkins.git /home/admin/cfengine-deb-jenkins
 
 Adopt pbuilder for usage with building for Ubuntu:
 
     echo PBUILDER_CONFIG=/etc/jenkins/pbuilderrc | sudo tee -a /etc/jenkins/debian_glue
-    sudo cp /home/admin/kamailio-deb-jenkins/pbuilder/pbuilderrc /etc/jenkins/pbuilderrc
-    sudo dpkg -i /home/admin/kamailio-deb-jenkins/debs/ubuntu-keyring_2012.05.19_all.deb
+    sudo cp /home/admin/cfengine-deb-jenkins/pbuilder/pbuilderrc /etc/jenkins/pbuilderrc
+    sudo dpkg -i /home/admin/cfengine-deb-jenkins/debs/ubuntu-keyring_2012.05.19_all.deb
 
 Deploy nginx as proxy for Jenkins:
 
     sudo apt-get -y install nginx
     sudo openssl req -days 3650 -nodes -new -x509 -keyout /etc/ssl/private/server.key -out /etc/ssl/private/server.cert
-    sudo cp /home/admin/kamailio-deb-jenkins/nginx/default /etc/nginx/sites-available/default
+    sudo cp /home/admin/cfengine-deb-jenkins/nginx/default /etc/nginx/sites-available/default
     sudo /etc/init.d/nginx restart
 
 Set up Debian repository directories:
 
     sudo mkdir /srv/repository
     sudo chown jenkins /srv/repository
-    sudo ln -s /srv/repository/ /srv/debian
+    sudo ln -s /srv/repository/ /srv/deb
 
 GPG key setup for Debian repository:
 
@@ -66,7 +67,7 @@ GPG key setup for Debian repository:
     sudo -s
     su - jenkins
     gpg --gen-key # note $KEY_ID
-    gpg --armor --export $KEY_ID --output /srv/debian/kamailiodebkey.gpg
+    gpg --armor --export $KEY_ID --output /srv/deb/autobuilder.gpg
     echo KEY_ID=$KEY_ID | sudo tee -a /etc/jenkins/debian_glue
 
 Set up jenkins-job-builder:
@@ -104,7 +105,7 @@ Fix headless issue with Java:
 
 Generate according Jenkins jobs:
 
-    cd /home/admin/kamailio-deb-jenkins/jjb
+    cd /home/admin/cfengine-deb-jenkins/jjb
     make
 
 
@@ -112,4 +113,4 @@ Questions?
 ----------
 
 For Jenkins/Build environment related questions contact [Michael Prokop](https://github.com/mika/) (mprokop (at) sipwise dot com),
-for Kamailio (packaging) related questions contact [Victor Seva](https://github.com/linuxmaniac/) (vseva (at) sipwise dot com).
+for CFEngine (packaging) related questions contact [Debian Packaging Team](https://github.com/Webhuis/Cfengine-debian/) (debian-team (at) cfengine dot com).
