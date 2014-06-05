@@ -1,4 +1,4 @@
-ENABLED=kamailio.yaml sems.yaml
+ENABLED=cfengine.yaml
 
 all: $(ENABLED)
 

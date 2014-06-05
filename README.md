@@ -28,7 +28,7 @@ Install etckeeper for tracking changes in /etc:
 
 Automatically deploy [jenkins-debian-glue](http://jenkins-debian-glue.org/):
 
-    wget --no-check-certificate https://raw.github.com/mika/jenkins-debian-glue/master/puppet/apply.sh
+    wget https://raw.github.com/mika/jenkins-debian-glue/master/puppet/apply.sh
     sudo bash ./apply.sh $PASSWORD
 
 Support providing additional configuration to cowbuilder + related tools:
@@ -48,7 +48,7 @@ Adopt pbuilder for usage with building for Ubuntu:
     sudo cp /home/admin/cfengine-deb-jenkins/pbuilder/pbuilderrc /etc/jenkins/pbuilderrc
     sudo dpkg -i /home/admin/cfengine-deb-jenkins/debs/ubuntu-keyring_2012.05.19_all.deb
 
-Deploy nginx as proxy for Jenkins:
+Deploy nginx as proxy for Jenkins (NOTE: you have to do a custom nginx config, this one comes from kamilio):
 
     sudo apt-get -y install nginx
     sudo openssl req -days 3650 -nodes -new -x509 -keyout /etc/ssl/private/server.key -out /etc/ssl/private/server.cert
@@ -70,9 +70,9 @@ GPG key setup for Debian repository:
     gpg --armor --export $KEY_ID --output /srv/deb/autobuilder.gpg
     echo KEY_ID=$KEY_ID | sudo tee -a /etc/jenkins/debian_glue
 
-Set up jenkins-job-builder:
+Set up jenkins-job-builder (also create the user and set the password in Jenkins):
 
-    sudo tee -a /etc/jenkins_jobs/jenkins_jobs2.ini >/dev/null <<EOF
+    sudo tee -a /etc/jenkins_jobs/jenkins_jobs.ini >/dev/null <<EOF
     [jenkins]
     user=jenkins-job-builder
     password=$PASSWORD
@@ -88,11 +88,6 @@ Install Build Blocker Jenkins Plugin:
 
     sudo wget --no-check-certificate -O /var/lib/jenkins/plugins/build-blocker-plugin.hpi http://updates.jenkins-ci.org/latest/build-blocker-plugin.hpi
     sudo chown jenkins:nogroup /var/lib/jenkins/plugins/build-blocker-plugin.hpi
-
-Install CppCheck Jenkins Plugin:
-
-    sudo wget --no-check-certificate -O /var/lib/jenkins/plugins/cppcheck.hpi http://updates.jenkins-ci.org/latest/cppcheck.hpi
-    sudo chown jenkins:nogroup /var/lib/jenkins/plugins/cppcheck.hpi
 
 Fix headless issue with Java:
 

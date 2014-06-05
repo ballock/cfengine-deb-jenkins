@@ -40,8 +40,7 @@
       - '{name}-binaries'
       - '{name}-repos'
       - '{name}-piuparts'
-    email: &recipients
-      - boleslaw.tokarski@gmail.com
+    email: &recipients 'boleslaw.tokarski@gmail.com'
 
 ## list of projects with their configurations
 # build based on branches
@@ -155,7 +154,6 @@
             values:
               - slave
       builders:
-        - shell: '/home/admin/cfengine-deb-jenkins/scripts/ec2-facts'
         - shell: |
            echo "* Removing files workspace before copying artifacts from another project. *"
            rm -f ./* || true
@@ -268,7 +266,6 @@
             values:
               - slave
       builders:
-        - shell: '/home/admin/cfengine-deb-jenkins/scripts/ec2-facts'
         - shell: |
            echo "* Removing files workspace before copying artifacts from another project. *"
            rm -f ./* || true
