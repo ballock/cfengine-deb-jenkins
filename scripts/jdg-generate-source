@@ -12,7 +12,8 @@ env
 # defaults
 build_tag=false
 TAG=unknown
-BASE_DIR=${debian_dir:-"pkg/kamailio/deb"}
+#BASE_DIR=${debian_dir:-"pkg/deb"}
+BASE_DIR=${debian_dir:-""}
 
 if [ -n "$GIT_BRANCH" ] ; then
   case "$GIT_BRANCH" in
@@ -30,9 +31,9 @@ fi
 
 git clean -fxd
 
-cp -a "${BASE_DIR}/${distribution}" debian
+#cp -a "${BASE_DIR}/${distribution}" debian
 
-export DEBEMAIL="Jenkins Sipwise <jenkins@sipwise.com>"
+export DEBEMAIL="CFEngine Debian Team <debain-team@cfengine.com>"
 
 ORIG_VERSION=$(dpkg-parsechangelog --count 1 | awk '/^Version/ {print $2}')
 TIMESTAMP="$(date -u +%Y%m%d%H%M%S)"
