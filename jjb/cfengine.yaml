@@ -139,6 +139,7 @@
         numToKeep: '{logrotate_keep}'
       execution-strategy:
         sequential: true
+        combination-filter: '(architecture=="amd64" || architecture=="i386").implies(label=="x86") && (architecture=="armel" || architecture=="armhf").implies(label=="arm")'
       axes:
         - axis:
             type: user-defined
@@ -152,7 +153,8 @@
             type: slave
             name: label
             values:
-              - slave
+              - x86
+              - arm
       builders:
         - shell: |
            echo "* Removing files workspace before copying artifacts from another project. *"
@@ -264,7 +266,8 @@
             type: slave
             name: label
             values:
-              - slave
+              - x86
+              - arm
       builders:
         - shell: |
            echo "* Removing files workspace before copying artifacts from another project. *"
