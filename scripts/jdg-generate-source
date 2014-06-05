@@ -13,7 +13,7 @@ env
 build_tag=false
 TAG=unknown
 #BASE_DIR=${debian_dir:-"pkg/deb"}
-BASE_DIR=${debian_dir:-""}
+BASE_DIR=${debian_dir:-"."}
 
 if [ -n "$GIT_BRANCH" ] ; then
   case "$GIT_BRANCH" in
@@ -63,4 +63,4 @@ else
     -- "Automated package build."
 fi
 
-dpkg-buildpackage -uc -us -nc -d -S -i -I --source-option=--unapply-patches
+git-buildpackage --git-ignore-new --git-ignore-branch -uc -us -nc -d -S -i -I --source-option=--unapply-patches
