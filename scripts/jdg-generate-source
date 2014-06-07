@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 # Purpose: generate Debian source package based on project's git repository
 # schema:
 # $debian_dir: and one directory for every distribution
@@ -12,8 +12,8 @@ env
 # defaults
 build_tag=false
 TAG=unknown
-#BASE_DIR=${debian_dir:-"pkg/deb"}
-BASE_DIR=${debian_dir:-"."}
+BASE_DIR=${debian_dir:-"pkg"}
+#BASE_DIR=${debian_dir:-"."}
 
 if [ -n "$GIT_BRANCH" ] ; then
   case "$GIT_BRANCH" in
@@ -31,7 +31,10 @@ fi
 
 git clean -fxd
 
-#cp -a "${BASE_DIR}/${distribution}" debian
+mkdir -p debian
+cp -a "${BASE_DIR}"/"${distribution}"/* debian/
+rm -rf pkg/
+
 
 export DEBEMAIL="CFEngine Debian Team <debain-team@cfengine.com>"
 
