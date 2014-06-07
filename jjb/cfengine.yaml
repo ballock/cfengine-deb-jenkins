@@ -72,6 +72,25 @@
     jobs: *jobs
     basetag: '3.6.0rc2'
 
+- job:
+      name: 'lt-cf-serverd-cleanup'
+      project-type: matrix
+      description: |
+        Cleanup leftover lt-cf-serverd processes.
+        <!-- Do NOT edit this job through the web, it is generated via jenkins-job-builder! -->
+      axes:
+        - axis:
+            type: slave
+            name: label
+            values:
+              - x86
+              - arm
+      disabled: false
+      builders:
+        - shell: 'sudo killall lt-cf-serverd || true'
+      triggers:
+        - pollscm: '@midnight'
+
 ## the job template
 - job-template:
       name: '{name}-source'
