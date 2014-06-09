@@ -81,7 +81,7 @@ OTHERMIRROR="deb http://ci.tokarscy.com/deb $DIST main"
 #fi
 #
 # ubuntu specific configuration
-case "$distribution" in
+case "$DIST" in
   utopic|trusty|precise)
     MIRRORSITE="http://$UBUNTU_MIRROR/ubuntu/"
     # we need key id 40976EAF437D05B5
