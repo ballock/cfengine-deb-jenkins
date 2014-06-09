@@ -2,7 +2,8 @@
 
 export BASE_PATH="binaries/"
 export PROVIDE_ONLY=true
-export REPOSITORY="/srv/repository/${JOB_NAME%-repos*}"
+#export REPOSITORY="/srv/repository/${JOB_NAME%-repos*}"
+export REPOSITORY="/srv/repository/${SUBREPO}"
 export REPOS="${distribution}"
 export SKIP_REMOVAL=true
 

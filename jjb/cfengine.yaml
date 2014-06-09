@@ -23,6 +23,9 @@
      - i386
      - armel
      - armhf
+    slavearchs: !!python/tuple &sarchs
+     - x86
+     - arm
     repos: &repos
      - 'http://github.com/ballock/Cfengine-debian'
     reftag: &reftag
@@ -82,9 +85,7 @@
         - axis:
             type: slave
             name: label
-            values:
-              - x86
-              - arm
+            values: *sarchs
       disabled: false
       builders:
         - shell: 'sudo killall lt-cf-serverd || true'
@@ -171,9 +172,7 @@
         - axis:
             type: slave
             name: label
-            values:
-              - x86
-              - arm
+            values: *sarchs
       builders:
         - shell: |
            echo "* Removing files workspace before copying artifacts from another project. *"
@@ -224,6 +223,7 @@
         numToKeep: '{logrotate_keep}'
       execution-strategy:
         sequential: true
+        combination-filter: '(architecture=="amd64" || architecture=="i386").implies(fromslave=="x86") && (architecture=="armel" || architecture=="armhf").implies(fromslave=="arm")'
       axes:
         - axis:
             type: user-defined
@@ -234,6 +234,10 @@
             name: distribution
             values: '{obj:distributions}'
         - axis:
+            type: user-defined
+            name: fromslave
+            values: *sarchs 
+        - axis:
             type: slave
             name: label
             values:
@@ -243,7 +247,7 @@
            echo "* Removing files workspace before copying artifacts from another project. *"
            rm -f ./* || true
         - copyartifact:
-            project: '{name}-binaries/architecture=$architecture,distribution=$distribution,label=slave'
+            project: '{name}-binaries/architecture=$architecture,distribution=$distribution,label=$fromslave'
             filter: '*'
             which-build: upstream-build
             fallback-to-last-successful: true
@@ -284,9 +288,7 @@
         - axis:
             type: slave
             name: label
-            values:
-              - x86
-              - arm
+            values: *sarchs
       builders:
         - shell: |
            echo "* Removing files workspace before copying artifacts from another project. *"
