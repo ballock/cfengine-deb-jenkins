@@ -28,9 +28,6 @@ if [ -z "${DIST}" ] && [ -r "debian/changelog" ]; then
     fi
 fi
 
-
-OTHERMIRROR="deb http://ci.tokarscy.com/deb $DIST main"
-
 ## Optionally set a default distribution if none is used. Note that you can set
 ## your own default (i.e. ${DIST:="unstable"}).
 #: ${DIST:="$(lsb_release --short --codename)"}
@@ -85,6 +82,7 @@ case "$DIST" in
   utopic|trusty|precise)
     MIRRORSITE="http://$UBUNTU_MIRROR/ubuntu/"
     # we need key id 40976EAF437D05B5
+    DEBOOTSTRAPOPTS=("${DEBOOTSTRAPOPTS[@]}" "--keyring=/usr/share/keyrings/ubuntu-archive-keyring.gpg")
     # cowdancer is in universe
     COMPONENTS="main universe"
     # package install speedup
