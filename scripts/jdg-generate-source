@@ -24,16 +24,18 @@ if [ -n "$GIT_BRANCH" ] ; then
   esac
 fi
 
-if [ ! -d "$BASE_DIR" ]; then
-  echo 'No $BASE_DIR found on source'
+if [ ! -d "$BASE_DIR" -a ! -d debian ]; then
+  echo 'No $BASE_DIR nor debian/ found on source'
   exit 1
 fi
 
 git clean -fxd
 
-mkdir -p debian
-cp -a "${BASE_DIR}"/"${distribution}"/* debian/
-rm -rf pkg/
+if [ "$BASE_DIR"X != debianX ]; then
+  mkdir -p debian
+  cp -a "${BASE_DIR}"/"${distribution}"/* debian/
+  rm -rf "$BASE_DIR"
+fi
 
 
 export DEBEMAIL="CFEngine Debian Team <debain-team@cfengine.com>"
