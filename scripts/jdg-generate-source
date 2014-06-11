@@ -29,6 +29,10 @@ if [ ! -d "$BASE_DIR" -a ! -d debian ]; then
   exit 1
 fi
 
+if [ ! -d "$BASE_DIR" ]; then
+  BASE_DIR="."
+fi
+
 git clean -fxd
 
 if [ "$BASE_DIR"X != debianX ]; then
