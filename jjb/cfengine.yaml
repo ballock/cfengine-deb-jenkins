@@ -25,7 +25,7 @@
      - armhf
     slavearchs: !!python/tuple &sarchs
      - x86
-     - arm
+#     - arm
     repos: &repos
      - 'http://github.com/ballock/Cfengine-debian'
     reftag: &reftag
@@ -61,6 +61,21 @@
     basetag: '3.6.0rc2'
 
 - project:
+    name: openssl
+    logrotate_keep: *logrotate_keep
+    repos:
+      - 'http://github.com/ballock/openssl-deb'
+    refspec: *refbranch
+    branch: *branch
+    browser: *browser
+    browser-url: 
+      - 'https://github.com/ballock/lmdb-deb'
+    distributions: !!python/tuple [squeeze, wheezy, lucid, precise]
+    architectures: *architectures
+    jobs: *jobs
+    basetag: '3.6.0rc2'
+
+- project:
     name: lmdb
     logrotate_keep: *logrotate_keep
     repos:
@@ -74,23 +89,6 @@
     architectures: *architectures
     jobs: *jobs
     basetag: '3.6.0rc2'
-
-- job:
-      name: 'lt-cf-serverd-cleanup'
-      project-type: matrix
-      description: |
-        Cleanup leftover lt-cf-serverd processes.
-        <!-- Do NOT edit this job through the web, it is generated via jenkins-job-builder! -->
-      axes:
-        - axis:
-            type: slave
-            name: label
-            values: *sarchs
-      disabled: false
-      builders:
-        - shell: 'sudo killall lt-cf-serverd || true'
-      triggers:
-        - pollscm: '@midnight'
 
 ## the job template
 - job-template:
@@ -276,6 +274,7 @@
         numToKeep: '{logrotate_keep}'
       execution-strategy:
         sequential: true
+        combination-filter: '(architecture=="amd64" || architecture=="i386").implies(fromslave=="x86") && (architecture=="armel" || architecture=="armhf").implies(fromslave=="arm")'
       axes:
         - axis:
             type: user-defined
@@ -286,6 +285,10 @@
             name: distribution
             values: '{obj:distributions}'
         - axis:
+            type: user-defined
+            name: fromslave
+            values: *sarchs 
+        - axis:
             type: slave
             name: label
             values: *sarchs
@@ -294,7 +297,7 @@
            echo "* Removing files workspace before copying artifacts from another project. *"
            rm -f ./* || true
         - copyartifact:
-            project: '{name}-binaries/architecture=$architecture,distribution=$distribution,label=slave'
+            project: '{name}-binaries/architecture=$architecture,distribution=$distribution,label=$fromslave'
             filter: '*.deb'
             which-build: upstream-build
             fallback-to-last-successful: true
