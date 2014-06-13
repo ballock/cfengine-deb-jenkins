@@ -133,7 +133,7 @@
             /usr/bin/lintian-junit-report *.dsc > report/lintian.xml
       publishers:
         - archive:
-            artifacts: '*.gz,*.bz2,*.xz,*.deb,*.dsc,*.changes,lintian.txt'
+            artifacts: '*.gz,*.bz2,*.xz,*.deb,*.udeb,*.dsc,*.changes,lintian.txt'
         - trigger:
             project: '{name}-binaries'
             threshold: UNSTABLE
@@ -190,7 +190,7 @@
             /usr/bin/adtsummary_tap adt/summary > report/autopkgtest.tap
       publishers:
         - archive:
-            artifacts: '**/*.gz,**/*.bz2,**/*.xz,**/*.deb,**/*.dsc,**/*.changes,**/lintian.txt'
+            artifacts: '**/*.gz,**/*.bz2,**/*.xz,**/*.deb,**/*.udeb,**/*.dsc,**/*.changes,**/lintian.txt'
         - tap:
             results: 'report/*.tap'
         - junit:
@@ -253,7 +253,7 @@
         - shell: "/home/admin/cfengine-deb-jenkins/scripts/jdg-repository"
       publishers:
         - archive:
-            artifacts: '**/*.gz,**/*.bz2,**/*.xz,**/*.deb,**/*.dsc,**/*.changes'
+            artifacts: '**/*.gz,**/*.bz2,**/*.xz,**/*.deb,**/*.udeb,**/*.dsc,**/*.changes'
         - fingerprint:
             record-artifacts: true
         - workspace-cleanup:
