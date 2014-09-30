@@ -55,14 +55,14 @@ case "$DIST" in
     # lacks debhelper 9, present in backports
     OTHERMIRROR="$OTHERMIRROR | deb http://$DEBIAN_BACKPORTS_MIRROR/debian-backports/ squeeze-backports $COMPONENTS"
     ;;
-  raspbian-wheezy)
+  raspwheezy)
     MIRRORSITE="http://http://archive.raspbian.org/raspbian/"
     # package install speedup
     EXTRAPACKAGES="eatmydata"
     export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}/usr/lib/libeatmydata/libeatmydata.so"
     DIST=wheezy
     ;;
-  raspbian-jessie)
+  raspjessie)
     MIRRORSITE="http://http://archive.raspbian.org/raspbian/"
     # package install speedup
     EXTRAPACKAGES="eatmydata"

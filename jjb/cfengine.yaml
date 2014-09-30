@@ -18,8 +18,8 @@
      - precise
      - trusty
      - utopic
-     - raspbian-wheezy
-     - raspbian-jessie
+     - raspwheezy
+     - raspjessie
     architectures: !!python/tuple &architectures
      - amd64
      - i386
