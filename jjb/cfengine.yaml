@@ -18,6 +18,8 @@
      - precise
      - trusty
      - utopic
+     - raspbian-wheezy
+     - raspbian-jessie
     architectures: !!python/tuple &architectures
      - amd64
      - i386
@@ -157,7 +159,7 @@
         numToKeep: '{logrotate_keep}'
       execution-strategy:
         sequential: true
-        combination-filter: '(architecture=="amd64" || architecture=="i386").implies(label=="x86") && (architecture=="armel" || architecture=="armhf").implies(label=="arm")'
+        combination-filter: '(architecture=="amd64" || architecture=="i386").implies(label=="x86") && (architecture=="armel" || architecture=="armhf").implies(label=="arm") && (distribution=="raspbian-wheezy" || distribution=="raspbian-jessie").implies(architecture=="armhf")'
       axes:
         - axis:
             type: user-defined
