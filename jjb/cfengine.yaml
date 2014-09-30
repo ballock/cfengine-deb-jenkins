@@ -25,7 +25,7 @@
      - armhf
     slavearchs: !!python/tuple &sarchs
      - x86
-#     - arm
+     - arm
     repos: &repos
      - 'http://github.com/ballock/Cfengine-debian'
     reftag: &reftag
