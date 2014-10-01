@@ -60,7 +60,7 @@
     distributions: *distributions
     architectures: *architectures
     jobs: *jobs
-    basetag: '3.6.0rc2'
+    basetag: '3.6.1'
 
 - project:
     name: openssl
@@ -71,11 +71,11 @@
     branch: *branch
     browser: *browser
     browser-url: 
-      - 'https://github.com/ballock/lmdb-deb'
+      - 'https://github.com/ballock/openssl-deb'
     distributions: !!python/tuple [squeeze, wheezy, lucid, precise]
     architectures: *architectures
     jobs: *jobs
-    basetag: '3.6.0rc2'
+    basetag: '3.6.1'
 
 - project:
     name: lmdb
@@ -87,10 +87,10 @@
     browser: *browser
     browser-url: 
       - 'https://github.com/ballock/lmdb-deb'
-    distributions: !!python/tuple [squeeze, wheezy, lucid, precise]
+    distributions: !!python/tuple [squeeze, wheezy, lucid, precise, raspwheezy]
     architectures: *architectures
     jobs: *jobs
-    basetag: '3.6.0rc2'
+    basetag: '3.6.1'
 
 ## the job template
 - job-template:
