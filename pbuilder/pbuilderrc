@@ -75,6 +75,7 @@ case "$DIST" in
     export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}/usr/lib/libeatmydata/libeatmydata.so"
     DIST=wheezy
     distribution=wheezy
+    APTCACHE="/var/cache/pbuilder/aptcache-raspberry/"
     ;;
   raspjessie)
     MIRRORSITE="http://http://archive.raspbian.org/raspbian/"
@@ -83,6 +84,7 @@ case "$DIST" in
     export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}/usr/lib/libeatmydata/libeatmydata.so"
     DIST=jessie
     distribution=jessie
+    APTCACHE="/var/cache/pbuilder/aptcache-raspberry/"
     ;;
   *)
     MIRRORSITE="http://$DEBIAN_MIRROR/debian/"
