@@ -159,7 +159,7 @@
         numToKeep: '{logrotate_keep}'
       execution-strategy:
         sequential: false
-        combination-filter: '(architecture=="amd64" || architecture=="i386").implies(label=="x86") && (architecture=="armel" || architecture=="armhf").implies(label=="arm") && (distribution=="raspbian-wheezy" || distribution=="raspbian-jessie").implies(architecture=="armhf") && (distribution=="lucid" && label=="arm").implies(architecture=="armel")'
+        combination-filter: '(architecture=="amd64" || architecture=="i386").implies(label=="x86") && (architecture=="armel" || architecture=="armhf").implies(label=="arm") && (distribution=="raspwheezy" || distribution=="raspjessie").implies(architecture=="armhf") && (distribution=="lucid" && label=="arm").implies(architecture=="armel")'
       axes:
         - axis:
             type: user-defined
