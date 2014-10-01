@@ -74,6 +74,7 @@ case "$DIST" in
     EXTRAPACKAGES="eatmydata"
     export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}/usr/lib/libeatmydata/libeatmydata.so"
     DIST=wheezy
+    distribution=wheezy
     ;;
   raspjessie)
     MIRRORSITE="http://http://archive.raspbian.org/raspbian/"
@@ -81,6 +82,7 @@ case "$DIST" in
     EXTRAPACKAGES="eatmydata"
     export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}/usr/lib/libeatmydata/libeatmydata.so"
     DIST=jessie
+    distribution=jessie
     ;;
   *)
     MIRRORSITE="http://$DEBIAN_MIRROR/debian/"
