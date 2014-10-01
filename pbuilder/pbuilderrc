@@ -14,9 +14,14 @@ DEBIAN_SUITES=($UNSTABLE_CODENAME $TESTING_CODENAME $STABLE_CODENAME $OLDSTABLE_
 UBUNTU_SUITES=("utopic" "trusty" "saucy" "precise" "lucid")
 
 # Mirrors to use. Update these to your preferred mirror.
-DEBIAN_MIRROR="debian.osuosl.org"
+if [ "$HOSTNAME"x = ballockx ]; then
+  DEBIAN_MIRROR="debian.osuosl.org"
+  UBUNTU_MIRROR="ubuntu.osuosl.org"
+else
+  DEBIAN_MIRROR="ftp.pl.debian.org"
+  UBUNTU_MIRROR="pl.archive.ubuntu.com"
+fi
 DEBIAN_BACKPORTS_MIRROR=$DEBIAN_MIRROR
-UBUNTU_MIRROR="ubuntu.osuosl.org"
 
 # Optionally use the changelog of a package to determine the suite to use if
 # none set.
@@ -30,7 +35,11 @@ fi
 
 case "$DIST" in
   utopic|trusty|precise)
-    MIRRORSITE="http://$UBUNTU_MIRROR/ubuntu/"
+    if [ "$ARCH"x = i386x -o "$ARCH"x = amd64x ]; then
+      MIRRORSITE="http://$UBUNTU_MIRROR/ubuntu/"
+    else
+      MIRRORSITE="http://ports.ubuntu.com/"
+    fi
     # we need key id 40976EAF437D05B5
     DEBOOTSTRAPOPTS=("${DEBOOTSTRAPOPTS[@]}" "--keyring=/usr/share/keyrings/ubuntu-archive-keyring.gpg")
     # cowdancer is in universe
@@ -41,7 +50,11 @@ case "$DIST" in
     ;;
   lucid)
     # lacks eatmydata package, so explicitely configure it
-    MIRRORSITE="http://$UBUNTU_MIRROR/ubuntu/"
+    if [ "$ARCH"x = i386x -o "$ARCH"x = amd64x ]; then
+      MIRRORSITE="http://$UBUNTU_MIRROR/ubuntu/"
+    else
+      MIRRORSITE="http://ports.ubuntu.com/"
+    fi
     # we need key id 40976EAF437D05B5
     DEBOOTSTRAPOPTS=("${DEBOOTSTRAPOPTS[@]}" "--keyring=/usr/share/keyrings/ubuntu-archive-keyring.gpg")
     # cowdancer is in universe
