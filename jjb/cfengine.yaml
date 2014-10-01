@@ -158,7 +158,7 @@
       logrotate:
         numToKeep: '{logrotate_keep}'
       execution-strategy:
-        sequential: true
+        sequential: false
         combination-filter: '(architecture=="amd64" || architecture=="i386").implies(label=="x86") && (architecture=="armel" || architecture=="armhf").implies(label=="arm") && (distribution=="raspbian-wheezy" || distribution=="raspbian-jessie").implies(architecture=="armhf")'
       axes:
         - axis:
