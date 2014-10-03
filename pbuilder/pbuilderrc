@@ -17,11 +17,12 @@ UBUNTU_SUITES=("utopic" "trusty" "saucy" "precise" "lucid")
 if [ "$HOSTNAME"x = ballockx ]; then
   DEBIAN_MIRROR="debian.osuosl.org"
   UBUNTU_MIRROR="ubuntu.osuosl.org"
+  DEBIAN_BACKPORTS_MIRROR=$DEBIAN_MIRROR
 else
   DEBIAN_MIRROR="ftp.pl.debian.org"
   UBUNTU_MIRROR="pl.archive.ubuntu.com"
+  DEBIAN_BACKPORTS_MIRROR="backports.debian.org"
 fi
-DEBIAN_BACKPORTS_MIRROR=$DEBIAN_MIRROR
 
 # Optionally use the changelog of a package to determine the suite to use if
 # none set.
@@ -60,7 +61,7 @@ case "$DIST" in
     # cowdancer is in universe
     COMPONENTS="main universe"
     # lucid-updates required for libc6 bug
-    OTHERMIRROR="$OTHERMIRROR | deb http://$UBUNTU_MIRROR/ubuntu/ lucid-updates $COMPONENTS"
+    OTHERMIRROR="$OTHERMIRROR | deb $MIRRORSITE lucid-updates $COMPONENTS"
     ;;
   squeeze|oldstable)
     # lacks eatmydata package, so explicitely configure it
@@ -69,21 +70,23 @@ case "$DIST" in
     OTHERMIRROR="$OTHERMIRROR | deb http://$DEBIAN_BACKPORTS_MIRROR/debian-backports/ squeeze-backports $COMPONENTS"
     ;;
   raspwheezy)
-    MIRRORSITE="http://http://archive.raspbian.org/raspbian/"
+    MIRRORSITE="http://archive.raspbian.org/raspbian/"
     # package install speedup
     EXTRAPACKAGES="eatmydata"
+    DEBOOTSTRAPOPTS=("${DEBOOTSTRAPOPTS[@]}" "--keyring=/usr/share/keyrings/raspbian-archive-keyring.gpg")
     export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}/usr/lib/libeatmydata/libeatmydata.so"
-    DIST=wheezy
-    distribution=wheezy
+    export DIST=wheezy
+    export distribution=wheezy
     APTCACHE="/var/cache/pbuilder/aptcache-raspberry/"
     ;;
   raspjessie)
-    MIRRORSITE="http://http://archive.raspbian.org/raspbian/"
+    MIRRORSITE="http://archive.raspbian.org/raspbian/"
     # package install speedup
     EXTRAPACKAGES="eatmydata"
+    DEBOOTSTRAPOPTS=("${DEBOOTSTRAPOPTS[@]}" "--keyring=/usr/share/keyrings/raspbian-archive-keyring.gpg")
     export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}/usr/lib/libeatmydata/libeatmydata.so"
-    DIST=jessie
-    distribution=jessie
+    export DIST=jessie
+    export distribution=jessie
     APTCACHE="/var/cache/pbuilder/aptcache-raspberry/"
     ;;
   *)
