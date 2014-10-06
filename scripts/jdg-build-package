@@ -7,6 +7,7 @@ export BUILD_ONLY=true
 export SUDO_CMD=sudo
 export COWBUILDER_DIST=$distribution
 export POST_BUILD_HOOK=/home/admin/cfengine-deb-jenkins/scripts/jdg-debc
+export MAIN_ARCHITECTURE=amd64
 
 # set specific mirror when building for Ubuntu
 case "$distribution" in

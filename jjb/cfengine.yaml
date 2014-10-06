@@ -18,8 +18,8 @@
      - precise
      - trusty
      - utopic
-     - raspwheezy
-     - raspjessie
+#     - raspwheezy
+#     - raspjessie
     architectures: !!python/tuple &architectures
      - amd64
      - i386
@@ -87,7 +87,8 @@
     browser: *browser
     browser-url: 
       - 'https://github.com/ballock/lmdb-deb'
-    distributions: !!python/tuple [squeeze, wheezy, lucid, precise, raspwheezy]
+#    distributions: !!python/tuple [squeeze, wheezy, lucid, precise, raspwheezy]
+    distributions: !!python/tuple [squeeze, wheezy, lucid, precise]
     architectures: *architectures
     jobs: *jobs
     basetag: '3.6.1'
