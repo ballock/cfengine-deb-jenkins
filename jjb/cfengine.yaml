@@ -224,7 +224,7 @@
         numToKeep: '{logrotate_keep}'
       execution-strategy:
         sequential: true
-        combination-filter: '(architecture=="amd64" || architecture=="i386").implies(fromslave=="x86") && (architecture=="armel" || architecture=="armhf").implies(fromslave=="arm")'
+        combination-filter: '(architecture=="amd64" || architecture=="i386").implies(fromslave=="x86") && (architecture=="armel" || architecture=="armhf").implies(fromslave=="arm") && (distribution=="raspwheezy" || distribution=="raspjessie").implies(architecture=="armhf") && ((distribution=="lucid" || distribution=="squeeze") && fromslave=="arm").implies(architecture=="armel") && ((distribution=="trusty" || distribution=="utopic") && fromslave=="arm").implies(architecture=="armhf")'
       axes:
         - axis:
             type: user-defined
