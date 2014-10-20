@@ -53,6 +53,19 @@
     name: cfengine3
     logrotate_keep: *logrotate_keep
     repos: *repos
+    refspec: *reftag
+    branch: 'origin/tags/debian/3.6.2-0.1'
+    browser: *browser
+    browser-url: *browserurl
+    distributions: *distributions
+    architectures: *architectures
+    jobs: *jobs
+    basetag: 'debian/3.6.2-0.1'
+
+- project:
+    name: cfengine3-daily
+    logrotate_keep: *logrotate_keep
+    repos: *repos
     refspec: *refbranch
     branch: *branch
     browser: *browser
