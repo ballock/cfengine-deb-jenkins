@@ -28,18 +28,12 @@
     slavearchs: !!python/tuple &sarchs
      - x86
      - arm
-    repos: &repos
-     - 'http://github.com/ballock/Cfengine-debian'
-    reftag: &reftag
-     - '+refs/tags/*:refs/remotes/origin/tags/*'
-    refbranch: &refbranch
-     - '+refs/heads/*:refs/remotes/origin/*'
-    branch: &branch
-      - 'master'
-    browser: &browser
-      - githubweb
-    browser-url: &browserurl
-      - 'https://github.com/ballock/Cfengine-debian'
+    repos: &repos 'http://github.com/ballock/Cfengine-debian'
+    reftag: &reftag '+refs/tags/*:refs/remotes/origin/tags/*'
+    refbranch: &refbranch '+refs/heads/*:refs/remotes/origin/*'
+    branch: &branch 'master'
+    browser: &browser githubweb
+    browser-url: &browserurl 'https://github.com/ballock/Cfengine-debian'
     jobs: &jobs
       - '{name}-source'
       - '{name}-binaries'
@@ -49,23 +43,60 @@
 
 ## list of projects with their configurations
 # build based on branches
+- scm:
+    name: cfengine3-repos
+    scm:
+      - git:
+          url: *repos
+          name: origin
+          basedir: source
+          refspec: *reftag
+          branches:
+            - 'origin/tags/debian/3.6.2-0.1'
+          wipe-workspace: false
+          browser: *browser
+          browser-url: *browserurl
+
 - project:
     name: cfengine3
     logrotate_keep: *logrotate_keep
-    repos: *repos
-    refspec: *reftag
-    branch: 'origin/tags/debian/3.6.2-0.1'
-    browser: *browser
-    browser-url: *browserurl
+    scm-name: 
+      - 'regular'
     distributions: *distributions
     architectures: *architectures
     jobs: *jobs
     basetag: 'debian/3.6.2-0.1'
 
+- scm:
+    name: cfe-upstream
+    scm:
+      - git:
+         url: 'https://github.com/cfengine/core'
+         branches:
+          - 'origin/master'
+         basedir: source
+         wipe-workspace: false
+
+- scm:
+    name: cfe-debianization
+    scm:
+      - git:
+         url: 'https://github.com/ballock/cfengine-debianization'
+         branches:
+          - 'origin/master'
+         basedir: source/debian
+
+- scm:
+    name: cfengine3-daily-repos
+    scm:
+     - cfe-upstream 
+     - cfe-debianization
+
 - project:
     name: cfengine3-daily
     logrotate_keep: *logrotate_keep
-    repos: *repos
+    scm-name: 
+      - cfe-upstream-debianization
     refspec: *refbranch
     branch: *branch
     browser: *browser
@@ -75,31 +106,45 @@
     jobs: *jobs
     basetag: '3.6.1'
 
+- scm:
+    name: openssl-repos
+    scm:
+      - git:
+          url: 'http://github.com/ballock/openssl-deb'
+          name: origin
+          basedir: source
+          refspec: *refbranch
+          branches:
+            - *branch
+          wipe-workspace: false
+          browser: *browser
+          browser-url: 'https://github.com/ballock/openssl-deb'
+
 - project:
     name: openssl
     logrotate_keep: *logrotate_keep
-    repos:
-      - 'http://github.com/ballock/openssl-deb'
-    refspec: *refbranch
-    branch: *branch
-    browser: *browser
-    browser-url: 
-      - 'https://github.com/ballock/openssl-deb'
     distributions: !!python/tuple [squeeze, wheezy, lucid, precise]
     architectures: *architectures
     jobs: *jobs
     basetag: '3.6.1'
 
+- scm:
+    name: lmdb-repos
+    scm:
+      - git:
+          url: 'http://github.com/ballock/lmdb-deb'
+          name: origin
+          basedir: source
+          refspec: *refbranch
+          branches:
+            - *branch
+          wipe-workspace: false
+          browser: *browser
+          browser-url: 'https://github.com/ballock/lmdb-deb'
+
 - project:
     name: lmdb
     logrotate_keep: *logrotate_keep
-    repos:
-      - 'http://github.com/ballock/lmdb-deb'
-    refspec: *refbranch
-    branch: *branch
-    browser: *browser
-    browser-url: 
-      - 'https://github.com/ballock/lmdb-deb'
 #    distributions: !!python/tuple [squeeze, wheezy, lucid, precise, raspwheezy]
     distributions: !!python/tuple [squeeze, wheezy, lucid, precise]
     architectures: *architectures
@@ -113,17 +158,8 @@
       description: |
         Build Debian source package of {name}.
         <!-- Do NOT edit this job through the web, it is generated via jenkins-job-builder! -->
-      scm:
-        - git:
-            url: '{repos}'
-            name: origin
-            basedir: source
-            refspec: '{refspec}'
-            branches:
-              - '{branch}'
-            wipe-workspace: false
-            browser: '{browser}'
-            browser-url: '{browser-url}'
+      scm: 
+        - '{name}-repos'
       execution-strategy:
         sequential: true
       axes:
