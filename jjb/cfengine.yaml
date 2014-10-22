@@ -81,9 +81,9 @@
     name: cfe-debianization
     scm:
       - git:
-         url: 'https://github.com/ballock/cfengine-debianization'
+         url: 'https://github.com/ballock/Cfengine-debian'
          branches:
-          - 'origin/master'
+          - 'origin/debianization'
          basedir: source/debian
 
 - scm:
