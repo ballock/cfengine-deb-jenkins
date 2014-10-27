@@ -32,7 +32,7 @@
     reftag: &reftag '+refs/tags/*:refs/remotes/origin/tags/*'
     refbranch: &refbranch '+refs/heads/*:refs/remotes/origin/*'
     branch: &branch 'master'
-    browser: &browser githubweb
+    browser: &github githubweb
     browser-url: &browserurl 'https://github.com/ballock/Cfengine-debian'
     jobs: &jobs
       - '{name}-source'
@@ -50,11 +50,11 @@
           url: *repos
           name: origin
           basedir: source
-          refspec: *reftag
+          refspec: *refbranch
           branches:
-            - 'origin/tags/debian/3.6.2-0.1'
+            - master
           wipe-workspace: false
-          browser: *browser
+          browser: *github
           browser-url: *browserurl
 
 - project:
@@ -99,7 +99,7 @@
       - cfe-upstream-debianization
     refspec: *refbranch
     branch: *branch
-    browser: *browser
+    browser: *github
     browser-url: *browserurl
     distributions: *distributions
     architectures: *architectures
@@ -117,7 +117,7 @@
           branches:
             - *branch
           wipe-workspace: false
-          browser: *browser
+          browser: *github
           browser-url: 'https://github.com/ballock/openssl-deb'
 
 - project:
@@ -139,7 +139,7 @@
           branches:
             - *branch
           wipe-workspace: false
-          browser: *browser
+          browser: *github
           browser-url: 'https://github.com/ballock/lmdb-deb'
 
 - project:
@@ -150,6 +150,40 @@
     architectures: *architectures
     jobs: *jobs
     basetag: '3.6.1'
+
+# open-vcdiff
+- scm:
+    name: openvcdiff-repos
+    scm:
+      - git:
+          url: https://github.com/ballock/open-vcdiff
+          name: origin
+          basedir: source
+          refspec: *reftag
+          branches:
+            - origin/tags/debian/0.8.4-1
+          wipe-workspace: false
+          browser: *github
+          browser-url: https://github.com/ballock/open-vcdiff
+
+- project:
+    name: openvcdiff
+    logrotate_keep: *logrotate_keep
+    scm-name: 
+      - open-vcdiff-repos
+    distributions: !!python/tuple
+     - wheezy
+ #    - jessie
+ #    - precise
+ #    - trusty
+ #    - utopic
+    architectures: !!python/tuple
+     - amd64
+     - i386
+#     - armel
+#     - armhf
+    jobs: *jobs
+    basetag: '0.8.4-2'
 
 ## the job template
 - job-template:
