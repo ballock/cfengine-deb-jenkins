@@ -161,7 +161,7 @@
           basedir: source
           refspec: *reftag
           branches:
-            - origin/tags/debian/0.8.4-1
+            - origin/tags/debian/0.8.4-3
           wipe-workspace: false
           browser: *github
           browser-url: https://github.com/ballock/open-vcdiff
@@ -183,7 +183,7 @@
 #     - armel
 #     - armhf
     jobs: *jobs
-    basetag: '0.8.4-2'
+    basetag: '0.8.4-3'
 
 ## the job template
 - job-template:
@@ -287,9 +287,9 @@
         - trigger:
             project: '{name}-repos'
             threshold: UNSTABLE
-        - trigger:
-            project: '{name}-piuparts'
-            threshold: UNSTABLE
+#        - trigger:
+#            project: '{name}-piuparts'
+#            threshold: UNSTABLE
         - workspace-cleanup:
             dirmatch: false
         - email:
