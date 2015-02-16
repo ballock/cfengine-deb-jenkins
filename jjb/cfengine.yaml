@@ -161,7 +161,7 @@
           basedir: source
           refspec: *reftag
           branches:
-            - origin/tags/debian/0.8.4-3
+            - origin/tags/debian/0.8.4-1.1
           wipe-workspace: false
           browser: *github
           browser-url: https://github.com/ballock/open-vcdiff
@@ -172,7 +172,7 @@
     scm-name: 
       - open-vcdiff-repos
     distributions: !!python/tuple
-     - wheezy
+     - squeeze
  #    - jessie
  #    - precise
  #    - trusty
@@ -183,7 +183,7 @@
 #     - armel
 #     - armhf
     jobs: *jobs
-    basetag: '0.8.4-3'
+    basetag: '0.8.4-1.1'
 
 ## the job template
 - job-template:
