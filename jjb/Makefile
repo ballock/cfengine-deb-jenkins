@@ -1,4 +1,4 @@
-ENABLED=cfengine.yaml
+ENABLED=cfengine.yaml dependencies.yaml
 
 all: $(ENABLED)
 

@@ -41,170 +41,27 @@
       - '{name}-piuparts'
     email: &recipients 'boleslaw.tokarski@gmail.com'
 
-## list of projects with their configurations
-# build based on branches
-- scm:
-    name: cfengine3-repos
-    scm:
-      - git:
-          url: *repos
-          name: origin
-          basedir: source
-          refspec: *refbranch
-          branches:
-            - master
-          wipe-workspace: false
-          browser: *github
-          browser-url: *browserurl
+
 
 - project:
-    name: cfengine3
+    name: libsodium
     logrotate_keep: *logrotate_keep
     scm-name: 
       - 'regular'
-    distributions: *distributions
-    architectures: *architectures
-    jobs: *jobs
-    basetag: 'debian/3.6.2-0.1'
-
-- scm:
-    name: cfe-upstream
-    scm:
-      - git:
-         url: 'https://github.com/cfengine/core'
-         branches:
-          - 'origin/master'
-         basedir: source
-         wipe-workspace: false
-
-- scm:
-    name: cfe-debianization
-    scm:
-      - git:
-         url: 'https://github.com/ballock/Cfengine-debian'
-         branches:
-          - 'origin/debianization'
-         basedir: source/debian
-
-- scm:
-    name: cfengine3-daily-repos
-    scm:
-     - cfe-upstream 
-     - cfe-debianization
-
-- project:
-    name: cfengine3-daily
-    logrotate_keep: *logrotate_keep
-    scm-name: 
-      - cfe-upstream-debianization
-    refspec: *refbranch
-    branch: *branch
-    browser: *github
-    browser-url: *browserurl
-    distributions: *distributions
-    architectures: *architectures
-    jobs: *jobs
-    basetag: '3.6.1'
-
-- scm:
-    name: openssl-repos
-    scm:
-      - git:
-          url: 'http://github.com/ballock/openssl-deb'
-          name: origin
-          basedir: source
-          refspec: *refbranch
-          branches:
-            - *branch
-          wipe-workspace: false
-          browser: *github
-          browser-url: 'https://github.com/ballock/openssl-deb'
-
-- project:
-    name: openssl
-    logrotate_keep: *logrotate_keep
-    distributions: !!python/tuple [squeeze, wheezy, lucid, precise]
-    architectures: *architectures
-    jobs: *jobs
-    basetag: '3.6.1'
-
-- scm:
-    name: lmdb-repos
-    scm:
-      - git:
-          url: 'http://github.com/ballock/lmdb-deb'
-          name: origin
-          basedir: source
-          refspec: *refbranch
-          branches:
-            - *branch
-          wipe-workspace: false
-          browser: *github
-          browser-url: 'https://github.com/ballock/lmdb-deb'
-
-- project:
-    name: lmdb
-    logrotate_keep: *logrotate_keep
-#    distributions: !!python/tuple [squeeze, wheezy, lucid, precise, raspwheezy]
-    distributions: !!python/tuple [squeeze, wheezy, lucid, precise]
-    architectures: *architectures
-    jobs: *jobs
-    basetag: '3.6.1'
-
-# open-vcdiff
-- scm:
-    name: openvcdiff-repos
-    scm:
-      - git:
-          url: https://github.com/ballock/open-vcdiff
-          name: origin
-          basedir: source
-          refspec: *reftag
-          branches:
-            - origin/tags/debian/0.8.4-1.1
-          wipe-workspace: false
-          browser: *github
-          browser-url: https://github.com/ballock/open-vcdiff
-
-- project:
-    name: openvcdiff
-    logrotate_keep: *logrotate_keep
-    scm-name: 
-      - open-vcdiff-repos
     distributions: !!python/tuple
      - squeeze
- #    - jessie
- #    - precise
- #    - trusty
- #    - utopic
+     - wheezy
+     - lucid
+     - precise
+     - trusty
+     - utopic
     architectures: !!python/tuple
      - amd64
      - i386
-#     - armel
-#     - armhf
+     - armel
+     - armhf
     jobs: *jobs
-    basetag: '0.8.4-1.1'
-
-
-#- project:
-#    name: libsodium
-#    logrotate_keep: *logrotate_keep
-#    scm-name: 
-#      - 'regular'
-#    distributions: !!python/tuple
-#     - squeeze
-#     - wheezy
-#     - lucid
-#     - precise
-#     - trusty
-#     - utopic
-#    architectures: !!python/tuple
-#     - amd64
-#     - i386
-#     - armel
-#     - armhf
-#    jobs: *jobs
-#    basetag: '1.0.0'
+    basetag: '1.0.0'
 
 
 ## the job template
@@ -214,8 +71,6 @@
       description: |
         Build Debian source package of {name}.
         <!-- Do NOT edit this job through the web, it is generated via jenkins-job-builder! -->
-      scm: 
-        - '{name}-repos'
       execution-strategy:
         sequential: true
       axes:
@@ -232,7 +87,12 @@
         numToKeep: '{logrotate_keep}'
       disabled: false
       triggers:
-        - pollscm: '@midnight'
+        - script:
+            script: '/home/admin/cfengine-deb-jenkins/scripts/poll-debian-archive'
+            cron: 'H/15 * * * *'
+            enable-concurrent: False
+            label: master
+            exit-code: 0
 
       builders:
         - shell: 'rm -f ./* || true'
