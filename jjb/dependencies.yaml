@@ -88,14 +88,15 @@
       disabled: false
       triggers:
         - script:
-            script: '/home/admin/cfengine-deb-jenkins/scripts/poll-debian-archive'
-            cron: 'H/15 * * * *'
+            script: '/home/admin/cfengine-deb-jenkins/scripts/poll-debian-archive jessie'
+            cron: 'H/2 * * * *'
             enable-concurrent: False
             label: master
             exit-code: 0
 
       builders:
-        - shell: 'rm -f ./* || true'
+        - shell: 'rm -rf ./* || true'
+        - shell: '/home/admin/cfengine-deb-jenkins/scripts/copy-polled-source.sh'
         - shell: '/home/admin/cfengine-deb-jenkins/scripts/jdg-generate-source'
         - shell: |
             mkdir -p report

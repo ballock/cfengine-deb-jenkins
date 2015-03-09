@@ -30,7 +30,7 @@ if [ ! -d "$BASE_DIR" -a ! -d debian ]; then
 fi
 
 if [ ! -d "$BASE_DIR" ]; then
-  BASE_DIR="."
+  BASE_DIR="debian"
 fi
 
 git clean -fxd

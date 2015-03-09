@@ -42,26 +42,17 @@ cp /etc/apt/trusted.gpg.d/* apt/trusted.gpg.d
 apt-get -c apt/apt.conf update
 apt-get -c apt/apt.conf source -d $PACKAGE
 newver=$( echo $PACKAGE*.dsc )
-if [ "$oldver"X = "$newver"X ]; then
+
+
+if [ ! -d source ]; then
+  git-import-dsc --pristine-tar $newver
+  mv $PACKAGE source
+  exit 0
+elif [ "$oldver"X != "$newver"X ]; then
+  cd source
+  git-import-dsc --pristine-tar ../$newver
+  exit 0
+else
   exit 1
 fi
 
-rm -rf source
-dpkg-source -x $PACKAGE*.dsc
-mv $PACKAGE-*/ source
-VCS=apt-get
-VCS_REVISION="sid"
-VCS_REVERT=moo # apt-get noop :)
-cd source
-RESULT=../result
-
-#echo $@ >>/tmp/env-from-poll
-#env >>/tmp/env-from-poll
-#
-#echo przed >>/tmp/env-from-poll
-#ls -l >>/tmp/env-from-poll
-#apt-get source $PACKAGE
-#echo po >>/tmp/env-from-poll
-#ls -l >>/tmp/env-from-poll
-
-exit 0
