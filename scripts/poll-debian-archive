@@ -1,0 +1,67 @@
+#!/bin/bash
+
+PACKAGE=${JOB_NAME%-source*}
+
+WORKDIR="$JENKINS_HOME"/jobs/"$JOB_NAME"/workspace
+cd $WORKDIR
+
+#mkdir -p debsource
+#cd debsource
+
+oldver=$( echo $PACKAGE*.dsc )
+
+rm -rf $PACKAGE*
+
+mkdir -p apt/lists/partial
+mkdir -p apt/preferences.d
+mkdir -p apt/trusted.gpg.d
+mkdir -p apt/cache
+mkdir -p apt/log
+touch apt/status
+
+cat > apt/apt.conf <<EOF
+Dir
+{
+     Etc "$WORKDIR/apt";
+     Cache "$WORKDIR/apt/cache";
+     Log "$WORKDIR/apt/log";
+     State "$WORKDIR/apt"
+     {
+         status "$WORKDIR/apt/status";
+     };
+};
+EOF
+
+cat > apt/sources.list <<EOF
+deb-src http://debian.mirrors.ovh.net/debian/ $1 main contrib non-free
+deb-src http://security.debian.org/ $1/updates main contrib non-free
+EOF
+
+cp /etc/apt/trusted.gpg.d/* apt/trusted.gpg.d
+
+apt-get -c apt/apt.conf update
+apt-get -c apt/apt.conf source -d $PACKAGE
+newver=$( echo $PACKAGE*.dsc )
+if [ "$oldver"X = "$newver"X ]; then
+  exit 1
+fi
+
+rm -rf source
+dpkg-source -x $PACKAGE*.dsc
+mv $PACKAGE-*/ source
+VCS=apt-get
+VCS_REVISION="sid"
+VCS_REVERT=moo # apt-get noop :)
+cd source
+RESULT=../result
+
+#echo $@ >>/tmp/env-from-poll
+#env >>/tmp/env-from-poll
+#
+#echo przed >>/tmp/env-from-poll
+#ls -l >>/tmp/env-from-poll
+#apt-get source $PACKAGE
+#echo po >>/tmp/env-from-poll
+#ls -l >>/tmp/env-from-poll
+
+exit 0
