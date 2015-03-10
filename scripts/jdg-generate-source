@@ -22,6 +22,9 @@ if [ -n "$GIT_BRANCH" ] ; then
       TAG=${GIT_BRANCH#origin/tags/}
       ;;
   esac
+else
+#it's not external git
+  build_tag=true
 fi
 
 if [ ! -d "$BASE_DIR" -a ! -d debian ]; then
@@ -41,6 +44,41 @@ if [ "$BASE_DIR"X != debianX ]; then
   rm -rf "$BASE_DIR"
 fi
 
+case "$distribution" in
+  squeeze)
+    debstr=deb6
+    ;;
+  wheezy)
+    debstr=deb7
+    ;;
+  jessie|testing)
+    debstr=deb8
+    ;;
+  sid|unstable)
+    debstr=deb9
+    ;;
+  experimental)
+    debstr=exp
+    ;;
+  lucid)
+    debstr=ubuntu10.04
+    ;;
+  precise)
+    debstr=ubuntu12.04
+    ;;
+  trusty)
+    debstr=ubuntu14.04
+    ;;
+  utopic)
+    debstr=ubuntu14.10
+    ;;
+  vivid)
+    debstr=ubuntu14.10
+    ;;
+  *)
+    debstr=$distribution
+    ;;
+esac
 
 export DEBEMAIL="CFEngine Debian Team <debain-team@cfengine.com>"
 
@@ -63,12 +101,12 @@ fi
 if "$build_tag" ; then
   echo "*** Building a tagged version (${TAG}).***"
   dch -b --distribution="${DISTRIBUTION}" \
-    --newversion="${ORIG_VERSION}+${distribution}" \
+    --newversion="${ORIG_VERSION}~${debstr}" \
     -- "Automated package build for tag $TAG and distribution $distribution."
 else
-  echo "*** Building version (${AUTO_VERSION}+${distribution}).***"
+  echo "*** Building version (${AUTO_VERSION}~${debstr}).***"
   dch -b --distribution="${DISTRIBUTION}" \
-    --newversion="${AUTO_VERSION}+${distribution}" \
+    --newversion="${AUTO_VERSION}~${debstr}" \
     -- "Automated package build."
 fi
 

@@ -46,8 +46,7 @@
 - project:
     name: libsodium
     logrotate_keep: *logrotate_keep
-    scm-name: 
-      - 'regular'
+    repo: assimilation
     distributions: !!python/tuple
      - squeeze
      - wheezy
@@ -150,7 +149,7 @@
             filter: '*'
             which-build: upstream-build
             fallback-to-last-successful: true
-        - shell: "/home/admin/cfengine-deb-jenkins/scripts/jdg-build-package"
+        - shell: "SUBREPO={repo} /home/admin/cfengine-deb-jenkins/scripts/jdg-build-package"
         - shell: |
             mkdir -p report
             /usr/bin/lintian-junit-report *.changes > report/lintian.xml
@@ -220,7 +219,7 @@
             which-build: upstream-build
             fallback-to-last-successful: true
             target: 'binaries/'
-        - shell: "/home/admin/cfengine-deb-jenkins/scripts/jdg-repository"
+        - shell: "SUBREPO={repo} /home/admin/cfengine-deb-jenkins/scripts/jdg-repository"
       publishers:
         - archive:
             artifacts: '**/*.gz,**/*.bz2,**/*.xz,**/*.deb,**/*.udeb,**/*.dsc,**/*.changes'
