@@ -31,6 +31,7 @@
     repos: &repos 'http://github.com/ballock/Cfengine-debian'
     reftag: &reftag '+refs/tags/*:refs/remotes/origin/tags/*'
     refbranch: &refbranch '+refs/heads/*:refs/remotes/origin/*'
+    multitar_source: ''
     branch: &branch 'master'
     browser: &github githubweb
     browser-url: &browserurl 'https://github.com/ballock/Cfengine-debian'
@@ -96,7 +97,7 @@
       builders:
         - shell: 'rm -rf ./* || true'
         - shell: '/home/admin/cfengine-deb-jenkins/scripts/copy-polled-source.sh'
-        - shell: '/home/admin/cfengine-deb-jenkins/scripts/jdg-generate-source'
+        - shell: 'MULTITAR_SOURCE={multitar_source} /home/admin/cfengine-deb-jenkins/scripts/jdg-generate-source'
         - shell: |
             mkdir -p report
             /usr/bin/lintian-junit-report *.dsc > report/lintian.xml

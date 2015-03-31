@@ -73,12 +73,17 @@ case "$distribution" in
     debstr=ubuntu14.10
     ;;
   vivid)
-    debstr=ubuntu14.10
+    debstr=ubuntu15.04
     ;;
   *)
     debstr=$distribution
     ;;
 esac
+
+#automatically take care of non-multiarch packages
+if [ $distribution = squeeze -o $distribution = lucid ]; then
+  sed -i 's#usr/lib/\*#usr/lib#g' debian/*.install debian/rules
+fi
 
 export DEBEMAIL="CFEngine Debian Team <debain-team@cfengine.com>"
 
@@ -109,5 +114,14 @@ else
     --newversion="${AUTO_VERSION}~${debstr}" \
     -- "Automated package build."
 fi
+
+ATOMIC_JOB_NAME=$( echo $JOB_NAME |cut -d / -f 1 )
+PACKAGE=${ATOMIC_JOB_NAME%-source*}
+UPSTREAM_VERSION="$( echo $ORIG_VERSION |cut -d \- -f 1 )"
+
+for tar_component in $MULTITAR_SOURCE; do
+  orig_name=`pristine-tar list |grep ${PACKAGE}_${UPSTREAM_VERSION}.orig-${tar_component}.tar`
+  pristine-tar checkout ../${orig_name}
+done
 
 git-buildpackage --git-ignore-new --git-ignore-branch -uc -us -nc -d -S -i -I --source-option=--unapply-patches

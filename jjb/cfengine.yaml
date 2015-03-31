@@ -29,8 +29,10 @@
      - x86
      - arm
     repos: &repos 'http://github.com/ballock/Cfengine-debian'
+    repo: cfengine
     reftag: &reftag '+refs/tags/*:refs/remotes/origin/tags/*'
     refbranch: &refbranch '+refs/heads/*:refs/remotes/origin/*'
+    multitar_source: ''
     branch: &branch 'master'
     browser: &github githubweb
     browser-url: &browserurl 'https://github.com/ballock/Cfengine-debian'
@@ -47,12 +49,12 @@
     name: cfengine3-repos
     scm:
       - git:
-          url: *repos
+          url: 'http://github.com/cfengine-pkg/cfengine3'
           name: origin
           basedir: source
           refspec: *refbranch
           branches:
-            - master
+            - origin/tags/debian/3.6.5-0.1
           wipe-workspace: false
           browser: *github
           browser-url: *browserurl
@@ -65,7 +67,8 @@
     distributions: *distributions
     architectures: *architectures
     jobs: *jobs
-    basetag: 'debian/3.6.2-0.1'
+    basetag: 'debian/3.6.5-0.1'
+    multitar_source: 'masterfiles'
 
 - scm:
     name: cfe-upstream
@@ -236,7 +239,7 @@
 
       builders:
         - shell: 'rm -f ./* || true'
-        - shell: '/home/admin/cfengine-deb-jenkins/scripts/jdg-generate-source'
+        - shell: 'MULTITAR_SOURCE={multitar_source} /home/admin/cfengine-deb-jenkins/scripts/jdg-generate-source'
         - shell: |
             mkdir -p report
             /usr/bin/lintian-junit-report *.dsc > report/lintian.xml
@@ -289,7 +292,7 @@
             filter: '*'
             which-build: upstream-build
             fallback-to-last-successful: true
-        - shell: "/home/admin/cfengine-deb-jenkins/scripts/jdg-build-package"
+        - shell: "SUBREPO={repo} /home/admin/cfengine-deb-jenkins/scripts/jdg-build-package"
         - shell: |
             mkdir -p report
             /usr/bin/lintian-junit-report *.changes > report/lintian.xml
@@ -359,7 +362,7 @@
             which-build: upstream-build
             fallback-to-last-successful: true
             target: 'binaries/'
-        - shell: "/home/admin/cfengine-deb-jenkins/scripts/jdg-repository"
+        - shell: "SUBREPO={repo} /home/admin/cfengine-deb-jenkins/scripts/jdg-repository"
       publishers:
         - archive:
             artifacts: '**/*.gz,**/*.bz2,**/*.xz,**/*.deb,**/*.udeb,**/*.dsc,**/*.changes'
