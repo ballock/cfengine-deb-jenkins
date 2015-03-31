@@ -35,7 +35,7 @@ if [ -z "${DIST}" ] && [ -r "debian/changelog" ]; then
 fi
 
 case "$DIST" in
-  utopic|trusty|precise)
+  vivid|utopic|trusty|precise|lucid)
     if [ "$ARCH"x = i386x -o "$ARCH"x = amd64x ]; then
       MIRRORSITE="http://$UBUNTU_MIRROR/ubuntu/"
     else
@@ -47,22 +47,24 @@ case "$DIST" in
     COMPONENTS="main universe"
     # package install speedup
     EXTRAPACKAGES="eatmydata"
+    # updates for... precise openssl and lucid libc6 bug
+    OTHERMIRROR="$OTHERMIRROR | deb $MIRRORSITE lucid-updates $COMPONENTS"
     export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}/usr/lib/libeatmydata/libeatmydata.so"
     ;;
-  lucid)
-    # lacks eatmydata package, so explicitely configure it
-    if [ "$ARCH"x = i386x -o "$ARCH"x = amd64x ]; then
-      MIRRORSITE="http://$UBUNTU_MIRROR/ubuntu/"
-    else
-      MIRRORSITE="http://ports.ubuntu.com/"
-    fi
-    # we need key id 40976EAF437D05B5
-    DEBOOTSTRAPOPTS=("${DEBOOTSTRAPOPTS[@]}" "--keyring=/usr/share/keyrings/ubuntu-archive-keyring.gpg")
-    # cowdancer is in universe
-    COMPONENTS="main universe"
-    # lucid-updates required for libc6 bug
-    OTHERMIRROR="$OTHERMIRROR | deb $MIRRORSITE lucid-updates $COMPONENTS"
-    ;;
+#  lucid)
+#    # lacks eatmydata package, so explicitely configure it
+#    if [ "$ARCH"x = i386x -o "$ARCH"x = amd64x ]; then
+#      MIRRORSITE="http://$UBUNTU_MIRROR/ubuntu/"
+#    else
+#      MIRRORSITE="http://ports.ubuntu.com/"
+#    fi
+#    # we need key id 40976EAF437D05B5
+#    DEBOOTSTRAPOPTS=("${DEBOOTSTRAPOPTS[@]}" "--keyring=/usr/share/keyrings/ubuntu-archive-keyring.gpg")
+#    # cowdancer is in universe
+#    COMPONENTS="main universe"
+#    # lucid-updates required for libc6 bug
+#    OTHERMIRROR="$OTHERMIRROR | deb $MIRRORSITE lucid-updates $COMPONENTS"
+#    ;;
   squeeze|oldstable)
     # lacks eatmydata package, so explicitely configure it
     MIRRORSITE="http://$DEBIAN_MIRROR/debian/"
