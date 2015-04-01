@@ -6,13 +6,6 @@ STABLE_CODENAME="wheezy"
 OLDSTABLE_CODENAME="squeeze"
 OLDSTABLE_BACKPORTS_SUITE="$OLDSTABLE_CODENAME-backports"
 
-# List of Debian suites.
-DEBIAN_SUITES=($UNSTABLE_CODENAME $TESTING_CODENAME $STABLE_CODENAME $OLDSTABLE_CODENAME
-    "unstable" "testing" "stable" "oldstable")
-
-# List of Ubuntu suites. Update these when needed.
-UBUNTU_SUITES=("utopic" "trusty" "saucy" "precise" "lucid")
-
 # Mirrors to use. Update these to your preferred mirror.
 if [ "$HOSTNAME"x = ballockx ]; then
   DEBIAN_MIRROR="debian.osuosl.org"
@@ -34,7 +27,12 @@ if [ -z "${DIST}" ] && [ -r "debian/changelog" ]; then
     fi
 fi
 
-case "$DIST" in
+if [ -z "${METADIST}" ]; then
+  METADIST=$DIST
+  echo Warning - no metadist set
+fi
+
+case "$METADIST" in
   vivid|utopic|trusty|precise)
     if [ "$ARCH"x = i386x -o "$ARCH"x = amd64x ]; then
       MIRRORSITE="http://$UBUNTU_MIRROR/ubuntu/"

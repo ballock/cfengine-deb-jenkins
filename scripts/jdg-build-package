@@ -5,21 +5,25 @@
 #export DEB_BUILD_OPTIONS="parallel=$(nproc)"
 export BUILD_ONLY=true
 export SUDO_CMD=sudo
-export COWBUILDER_DIST=$distribution
 export POST_BUILD_HOOK=/home/admin/cfengine-deb-jenkins/scripts/jdg-debc
 export MAIN_ARCHITECTURE=amd64
+export METADIST=$distribution
 
 # set specific mirror when building for Ubuntu
 case "$distribution" in
-  utopic|trusty|precise|lucid)
-    export MIRRORSITE="http://at.archive.ubuntu.com/ubuntu/"
-    echo "*** Building for Ubuntu release ${distribution}, using mirror $MIRRORSITE ***"
+  raspwheezy)
+    export DIST=wheezy
+    export distribution=wheezy
+    export COWBUILDER_BASE="/var/cache/pbuilder/base-${METADIST}-${architecture}.cow"
     ;;
-  lenny)
-    export MIRRORSITE="http://archive.debian.org/debian/"
-    echo "*** Building for Debian release lenny, using mirror $MIRRORSITE ***"
+  raspjessie)
+    export DIST=jessie
+    export distribution=jessie
+    export COWBUILDER_BASE="/var/cache/pbuilder/base-${METADIST}-${architecture}.cow"
     ;;
 esac
+
+export COWBUILDER_DIST=$distribution
 
 # execute main jenkins-debian-glue script
 /usr/bin/build-and-provide-package

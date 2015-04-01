@@ -51,8 +51,14 @@ case "$distribution" in
   wheezy)
     debstr=deb7
     ;;
+  raspwheezy)
+    debstr=raspdeb7
+    ;;
   jessie|testing)
     debstr=deb8
+    ;;
+  raspjessie)
+    debstr=raspdeb8
     ;;
   sid|unstable)
     debstr=deb9
