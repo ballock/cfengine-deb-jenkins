@@ -91,7 +91,7 @@ if [ $distribution = squeeze -o $distribution = lucid ]; then
   sed -i 's#usr/lib/\*#usr/lib#g' debian/*.install debian/rules
 fi
 
-export DEBEMAIL="CFEngine Debian Team <debain-team@cfengine.com>"
+export DEBEMAIL="CFEngine Debian Team <debian-team@cfengine.com>"
 
 ORIG_VERSION=$(dpkg-parsechangelog --count 1 | awk '/^Version/ {print $2}')
 TIMESTAMP="$(date -u +%Y%m%d%H%M%S)"

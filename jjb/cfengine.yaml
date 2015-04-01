@@ -18,6 +18,7 @@
      - precise
      - trusty
      - utopic
+     - vivid
 #     - raspwheezy
 #     - raspjessie
     architectures: !!python/tuple &architectures
@@ -28,7 +29,7 @@
     slavearchs: !!python/tuple &sarchs
      - x86
      - arm
-    repos: &repos 'http://github.com/ballock/Cfengine-debian'
+#    repos: &repos 'http://github.com/ballock/Cfengine-debian'
     repo: cfengine
     reftag: &reftag '+refs/tags/*:refs/remotes/origin/tags/*'
     refbranch: &refbranch '+refs/heads/*:refs/remotes/origin/*'
@@ -52,7 +53,7 @@
           url: 'http://github.com/cfengine-pkg/cfengine3'
           name: origin
           basedir: source
-          refspec: *refbranch
+          refspec: *reftag
           branches:
             - origin/tags/debian/3.6.5-0.1
           wipe-workspace: false
@@ -109,28 +110,28 @@
     jobs: *jobs
     basetag: '3.6.1'
 
-- scm:
-    name: openssl-repos
-    scm:
-      - git:
-          url: 'http://github.com/ballock/openssl-deb'
-          name: origin
-          basedir: source
-          refspec: *refbranch
-          branches:
-            - *branch
-          wipe-workspace: false
-          browser: *github
-          browser-url: 'https://github.com/ballock/openssl-deb'
-
-- project:
-    name: openssl
-    logrotate_keep: *logrotate_keep
-    distributions: !!python/tuple [squeeze, wheezy, lucid, precise]
-    architectures: *architectures
-    jobs: *jobs
-    basetag: '3.6.1'
-
+#- scm:
+#    name: openssl-repos
+#    scm:
+#      - git:
+#          url: 'http://github.com/ballock/openssl-deb'
+#          name: origin
+#          basedir: source
+#          refspec: *refbranch
+#          branches:
+#            - *branch
+#          wipe-workspace: false
+#          browser: *github
+#          browser-url: 'https://github.com/ballock/openssl-deb'
+#
+#- project:
+#    name: openssl
+#    logrotate_keep: *logrotate_keep
+#    distributions: !!python/tuple [squeeze, wheezy, lucid, precise]
+#    architectures: *architectures
+#    jobs: *jobs
+#    basetag: '3.6.1'
+#
 - scm:
     name: lmdb-repos
     scm:
@@ -138,9 +139,9 @@
           url: 'http://github.com/ballock/lmdb-deb'
           name: origin
           basedir: source
-          refspec: *refbranch
+          refspec: *reftag
           branches:
-            - *branch
+            - origin/tags/debian/0.9.10-1
           wipe-workspace: false
           browser: *github
           browser-url: 'https://github.com/ballock/lmdb-deb'
@@ -148,8 +149,8 @@
 - project:
     name: lmdb
     logrotate_keep: *logrotate_keep
-#    distributions: !!python/tuple [squeeze, wheezy, lucid, precise, raspwheezy]
-    distributions: !!python/tuple [squeeze, wheezy, lucid, precise]
+    distributions: !!python/tuple [squeeze, wheezy, lucid, precise, raspwheezy]
+#    distributions: !!python/tuple [squeeze, wheezy, lucid, precise]
     architectures: *architectures
     jobs: *jobs
     basetag: '3.6.1'
