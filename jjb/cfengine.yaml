@@ -19,17 +19,13 @@
      - trusty
      - utopic
      - vivid
-#     - raspwheezy
-#     - raspjessie
+     - raspwheezy
+     - raspjessie
     architectures: !!python/tuple &architectures
      - amd64
      - i386
      - armel
      - armhf
-    slavearchs: !!python/tuple &sarchs
-     - x86
-     - arm
-#    repos: &repos 'http://github.com/ballock/Cfengine-debian'
     repo: cfengine
     reftag: &reftag '+refs/tags/*:refs/remotes/origin/tags/*'
     refbranch: &refbranch '+refs/heads/*:refs/remotes/origin/*'
@@ -190,27 +186,6 @@
     basetag: '0.8.4-1.1'
 
 
-#- project:
-#    name: libsodium
-#    logrotate_keep: *logrotate_keep
-#    scm-name: 
-#      - 'regular'
-#    distributions: !!python/tuple
-#     - squeeze
-#     - wheezy
-#     - lucid
-#     - precise
-#     - trusty
-#     - utopic
-#    architectures: !!python/tuple
-#     - amd64
-#     - i386
-#     - armel
-#     - armhf
-#    jobs: *jobs
-#    basetag: '1.0.0'
-
-
 ## the job template
 - job-template:
       name: '{name}-source'
@@ -239,7 +214,7 @@
         - pollscm: '@midnight'
 
       builders:
-        - shell: 'rm -f ./* || true'
+        - shell: 'rm -rf ./* || true'
         - shell: 'MULTITAR_SOURCE={multitar_source} /home/admin/cfengine-deb-jenkins/scripts/jdg-generate-source'
         - shell: |
             mkdir -p report
@@ -341,10 +316,6 @@
             name: distribution
             values: '{obj:distributions}'
         - axis:
-            type: user-defined
-            name: fromslave
-            values: *sarchs 
-        - axis:
             type: slave
             name: label
             values:
@@ -383,30 +354,22 @@
         numToKeep: '{logrotate_keep}'
       execution-strategy:
         sequential: true
-        combination-filter: '(architecture=="amd64" || architecture=="i386").implies(fromslave=="x86") && (architecture=="armel" || architecture=="armhf").implies(fromslave=="arm")'
+        combination-filter: '(distribution=="raspwheezy" || distribution=="raspjessie").implies(architecture=="armhf") && (distribution=="lucid" || distribution=="squeeze").implies(architecture!="armhf") && (distribution=="trusty" || distribution=="utopic" || distribution=="vivid").implies(architecture!="armel")'
       axes:
         - axis:
-            type: user-defined
+            type: slave
             name: architecture
             values: '{obj:architectures}'
         - axis:
             type: user-defined
             name: distribution
             values: '{obj:distributions}'
-        - axis:
-            type: user-defined
-            name: fromslave
-            values: *sarchs 
-        - axis:
-            type: slave
-            name: label
-            values: *sarchs
       builders:
         - shell: |
            echo "* Removing files workspace before copying artifacts from another project. *"
            rm -f ./* || true
         - copyartifact:
-            project: '{name}-binaries/architecture=$architecture,distribution=$distribution,label=$fromslave'
+            project: '{name}-binaries/architecture=$architecture,distribution=$distribution'
             filter: '*.deb'
             which-build: upstream-build
             fallback-to-last-successful: true

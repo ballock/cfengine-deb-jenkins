@@ -18,17 +18,14 @@
      - precise
      - trusty
      - utopic
-#     - raspwheezy
-#     - raspjessie
+     - vivid
+     - raspwheezy
+     - raspjessie
     architectures: !!python/tuple &architectures
      - amd64
      - i386
      - armel
      - armhf
-    slavearchs: !!python/tuple &sarchs
-     - x86
-     - arm
-    repos: &repos 'http://github.com/ballock/Cfengine-debian'
     reftag: &reftag '+refs/tags/*:refs/remotes/origin/tags/*'
     refbranch: &refbranch '+refs/heads/*:refs/remotes/origin/*'
     multitar_source: ''
@@ -89,7 +86,7 @@
       triggers:
         - script:
             script: '/home/admin/cfengine-deb-jenkins/scripts/poll-debian-archive jessie'
-            cron: 'H/2 * * * *'
+            cron: '@midnight'
             enable-concurrent: False
             label: master
             exit-code: 0
@@ -127,20 +124,16 @@
         numToKeep: '{logrotate_keep}'
       execution-strategy:
         sequential: false
-        combination-filter: '(architecture=="amd64" || architecture=="i386").implies(label=="x86") && (architecture=="armel" || architecture=="armhf").implies(label=="arm") && (distribution=="raspwheezy" || distribution=="raspjessie").implies(architecture=="armhf") && ((distribution=="lucid" || distribution=="squeeze") && label=="arm").implies(architecture=="armel") && ((distribution=="trusty" || distribution=="utopic") && label=="arm").implies(architecture=="armhf")'
+        combination-filter: '(distribution=="raspwheezy" || distribution=="raspjessie").implies(architecture=="armhf") && (distribution=="lucid" || distribution=="squeeze").implies(architecture!="armhf") && (distribution=="trusty" || distribution=="utopic" || distribution=="vivid").implies(architecture!="armel")'
       axes:
         - axis:
-            type: user-defined
+            type: slave
             name: architecture
             values: '{obj:architectures}'
         - axis:
             type: user-defined
             name: distribution
             values: '{obj:distributions}'
-        - axis:
-            type: slave
-            name: label
-            values: *sarchs
       builders:
         - shell: |
            echo "* Removing files workspace before copying artifacts from another project. *"
@@ -191,7 +184,7 @@
         numToKeep: '{logrotate_keep}'
       execution-strategy:
         sequential: true
-        combination-filter: '(architecture=="amd64" || architecture=="i386").implies(fromslave=="x86") && (architecture=="armel" || architecture=="armhf").implies(fromslave=="arm") && (distribution=="raspwheezy" || distribution=="raspjessie").implies(architecture=="armhf") && ((distribution=="lucid" || distribution=="squeeze") && fromslave=="arm").implies(architecture=="armel") && ((distribution=="trusty" || distribution=="utopic") && fromslave=="arm").implies(architecture=="armhf")'
+        combination-filter: '(distribution=="raspwheezy" || distribution=="raspjessie").implies(architecture=="armhf") && (distribution=="lucid" || distribution=="squeeze").implies(architecture!="armhf") && (distribution=="trusty" || distribution=="utopic" || distribution=="vivid").implies(architecture!="armel")'
       axes:
         - axis:
             type: user-defined
@@ -202,10 +195,6 @@
             name: distribution
             values: '{obj:distributions}'
         - axis:
-            type: user-defined
-            name: fromslave
-            values: *sarchs 
-        - axis:
             type: slave
             name: label
             values:
@@ -215,7 +204,7 @@
            echo "* Removing files workspace before copying artifacts from another project. *"
            rm -f ./* || true
         - copyartifact:
-            project: '{name}-binaries/architecture=$architecture,distribution=$distribution,label=$fromslave'
+            project: '{name}-binaries/architecture=$architecture,distribution=$distribution'
             filter: '*'
             which-build: upstream-build
             fallback-to-last-successful: true
@@ -244,30 +233,22 @@
         numToKeep: '{logrotate_keep}'
       execution-strategy:
         sequential: true
-        combination-filter: '(architecture=="amd64" || architecture=="i386").implies(fromslave=="x86") && (architecture=="armel" || architecture=="armhf").implies(fromslave=="arm")'
+        combination-filter: '(distribution=="raspwheezy" || distribution=="raspjessie").implies(architecture=="armhf") && (distribution=="lucid" || distribution=="squeeze").implies(architecture!="armhf") && (distribution=="trusty" || distribution=="utopic" || distribution=="vivid").implies(architecture!="armel")'
       axes:
         - axis:
-            type: user-defined
+            type: slave
             name: architecture
             values: '{obj:architectures}'
         - axis:
             type: user-defined
             name: distribution
             values: '{obj:distributions}'
-        - axis:
-            type: user-defined
-            name: fromslave
-            values: *sarchs 
-        - axis:
-            type: slave
-            name: label
-            values: *sarchs
       builders:
         - shell: |
            echo "* Removing files workspace before copying artifacts from another project. *"
            rm -f ./* || true
         - copyartifact:
-            project: '{name}-binaries/architecture=$architecture,distribution=$distribution,label=$fromslave'
+            project: '{name}-binaries/architecture=$architecture,distribution=$distribution'
             filter: '*.deb'
             which-build: upstream-build
             fallback-to-last-successful: true
