@@ -270,7 +270,7 @@
         numToKeep: '{logrotate_keep}'
       execution-strategy:
         sequential: false
-        combination-filter: '(distribution=="raspwheezy" || distribution=="raspjessie").implies(architecture=="armhf") && ((distribution=="lucid" || distribution=="squeeze") && architecture!="armhf") && ((distribution=="trusty" || distribution=="utopic") && architecture!="armel")'
+        combination-filter: '(distribution=="raspwheezy" || distribution=="raspjessie").implies(architecture=="armhf") && (distribution=="lucid" || distribution=="squeeze").implies(architecture!="armhf") && (distribution=="trusty" || distribution=="utopic" || distribution=="vivid").implies(architecture!="armel")'
       axes:
         - axis:
             type: slave
@@ -330,7 +330,7 @@
         numToKeep: '{logrotate_keep}'
       execution-strategy:
         sequential: true
-        combination-filter: '(architecture=="amd64" || architecture=="i386").implies(fromslave=="x86") && (architecture=="armel" || architecture=="armhf").implies(fromslave=="arm") && (distribution=="raspwheezy" || distribution=="raspjessie").implies(architecture=="armhf") && ((distribution=="lucid" || distribution=="squeeze") && fromslave=="arm").implies(architecture=="armel") && ((distribution=="trusty" || distribution=="utopic") && fromslave=="arm").implies(architecture=="armhf")'
+        combination-filter: '(distribution=="raspwheezy" || distribution=="raspjessie").implies(architecture=="armhf") && (distribution=="lucid" || distribution=="squeeze").implies(architecture!="armhf") && (distribution=="trusty" || distribution=="utopic" || distribution=="vivid").implies(architecture!="armel")'
       axes:
         - axis:
             type: user-defined
@@ -354,7 +354,7 @@
            echo "* Removing files workspace before copying artifacts from another project. *"
            rm -f ./* || true
         - copyartifact:
-            project: '{name}-binaries/architecture=$architecture,distribution=$distribution,label=$fromslave'
+            project: '{name}-binaries/architecture=$architecture,distribution=$distribution'
             filter: '*'
             which-build: upstream-build
             fallback-to-last-successful: true
