@@ -7,7 +7,7 @@ OLDSTABLE_CODENAME="squeeze"
 OLDSTABLE_BACKPORTS_SUITE="$OLDSTABLE_CODENAME-backports"
 
 APTCACHE=""
-http_proxy="http://moria.tokarscy.com:3128"
+http_proxy="http://moria.tokarscy.com:3142"
 
 # Mirrors to use. Update these to your preferred mirror.
 if [ "$HOSTNAME"x = ballockx ]; then
