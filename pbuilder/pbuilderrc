@@ -7,7 +7,7 @@ OLDSTABLE_CODENAME="squeeze"
 OLDSTABLE_BACKPORTS_SUITE="$OLDSTABLE_CODENAME-backports"
 
 APTCACHE=""
-http_proxy="http://moria.tokarscy.com:3142"
+export http_proxy="http://moria.tokarscy.com:3142"
 
 # Mirrors to use. Update these to your preferred mirror.
 if [ "$HOSTNAME"x = ballockx ]; then
@@ -73,7 +73,7 @@ case "$METADIST" in
     OTHERMIRROR="$OTHERMIRROR | deb http://$DEBIAN_BACKPORTS_MIRROR/debian-backports/ squeeze-backports $COMPONENTS"
     ;;
   raspwheezy)
-    MIRRORSITE="http://mirrordirector.raspbian.org/raspbian/"
+    MIRRORSITE="http://archive.raspbian.org/raspbian/"
     # package install speedup
     EXTRAPACKAGES="eatmydata"
     DEBOOTSTRAPOPTS=("${DEBOOTSTRAPOPTS[@]}" "--keyring=/usr/share/keyrings/raspbian-archive-keyring.gpg")
@@ -82,7 +82,7 @@ case "$METADIST" in
     export distribution=wheezy
     ;;
   raspjessie)
-    MIRRORSITE="http://mirrordirect.raspbian.org/raspbian/"
+    MIRRORSITE="http://archive.raspbian.org/raspbian/"
     # package install speedup
     EXTRAPACKAGES="eatmydata"
     DEBOOTSTRAPOPTS=("${DEBOOTSTRAPOPTS[@]}" "--keyring=/usr/share/keyrings/raspbian-archive-keyring.gpg")
