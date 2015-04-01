@@ -6,6 +6,9 @@ STABLE_CODENAME="wheezy"
 OLDSTABLE_CODENAME="squeeze"
 OLDSTABLE_BACKPORTS_SUITE="$OLDSTABLE_CODENAME-backports"
 
+APTCACHE=""
+http_proxy="http://moria.tokarscy.com:3128"
+
 # Mirrors to use. Update these to your preferred mirror.
 if [ "$HOSTNAME"x = ballockx ]; then
   DEBIAN_MIRROR="debian.osuosl.org"
@@ -48,7 +51,6 @@ case "$METADIST" in
     # updates for... precise openssl and lucid libc6 bug
     OTHERMIRROR="$OTHERMIRROR | deb $MIRRORSITE ${DIST}-updates $COMPONENTS"
     export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}/usr/lib/libeatmydata/libeatmydata.so"
-    APTCACHE="/var/cache/pbuilder/aptcache/ubuntu/"
     ;;
   lucid)
     # lacks eatmydata package, so explicitely configure it
@@ -63,14 +65,12 @@ case "$METADIST" in
     COMPONENTS="main universe"
     # lucid-updates required for libc6 bug
     OTHERMIRROR="$OTHERMIRROR | deb $MIRRORSITE lucid-updates $COMPONENTS"
-    APTCACHE="/var/cache/pbuilder/aptcache/ubuntu/"
     ;;
   squeeze|oldstable)
     # lacks eatmydata package, so explicitely configure it
     MIRRORSITE="http://$DEBIAN_MIRROR/debian/"
     # lacks debhelper 9, present in backports
     OTHERMIRROR="$OTHERMIRROR | deb http://$DEBIAN_BACKPORTS_MIRROR/debian-backports/ squeeze-backports $COMPONENTS"
-    APTCACHE="/var/cache/pbuilder/aptcache/debian/"
     ;;
   raspwheezy)
     MIRRORSITE="http://mirrordirector.raspbian.org/raspbian/"
@@ -80,7 +80,6 @@ case "$METADIST" in
     export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}/usr/lib/libeatmydata/libeatmydata.so"
     export DIST=wheezy
     export distribution=wheezy
-    APTCACHE="/var/cache/pbuilder/aptcache/raspberry/"
     ;;
   raspjessie)
     MIRRORSITE="http://mirrordirect.raspbian.org/raspbian/"
@@ -90,7 +89,6 @@ case "$METADIST" in
     export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}/usr/lib/libeatmydata/libeatmydata.so"
     export DIST=jessie
     export distribution=jessie
-    APTCACHE="/var/cache/pbuilder/aptcache/raspberry/"
     ;;
   *)
     MIRRORSITE="http://$DEBIAN_MIRROR/debian/"
@@ -98,6 +96,5 @@ case "$METADIST" in
     EXTRAPACKAGES="eatmydata"
     DEBOOTSTRAPOPTS=("${DEBOOTSTRAPOPTS[@]}" "--keyring=/usr/share/keyrings/debian-archive-keyring.gpg")
     export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}/usr/lib/libeatmydata/libeatmydata.so"
-    APTCACHE="/var/cache/pbuilder/aptcache/debian/"
     ;;
 esac
