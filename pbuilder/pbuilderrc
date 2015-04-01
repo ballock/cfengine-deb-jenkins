@@ -93,6 +93,7 @@ case "$METADIST" in
     MIRRORSITE="http://$DEBIAN_MIRROR/debian/"
     # package install speedup
     EXTRAPACKAGES="eatmydata"
+    DEBOOTSTRAPOPTS=("${DEBOOTSTRAPOPTS[@]}" "--keyring=/usr/share/keyrings/debian-archive-keyring.gpg")
     export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}/usr/lib/libeatmydata/libeatmydata.so"
     ;;
 esac
