@@ -6,8 +6,6 @@ STABLE_CODENAME="wheezy"
 OLDSTABLE_CODENAME="squeeze"
 OLDSTABLE_BACKPORTS_SUITE="$OLDSTABLE_CODENAME-backports"
 
-APTCACHE=""
-export http_proxy="http://moria.tokarscy.com:3142"
 
 # Mirrors to use. Update these to your preferred mirror.
 if [ "$HOSTNAME"x = ballockx ]; then
@@ -18,6 +16,10 @@ else
   DEBIAN_MIRROR="ftp.pl.debian.org"
   UBUNTU_MIRROR="pl.archive.ubuntu.com"
   DEBIAN_BACKPORTS_MIRROR="backports.debian.org"
+#I only use raspbian at home. Otherwise, I'd need to specify
+#different APTCACHE for Debian and Raspbian
+  APTCACHE=""
+  export http_proxy="http://moria.tokarscy.com:3142"
 fi
 
 # Optionally use the changelog of a package to determine the suite to use if

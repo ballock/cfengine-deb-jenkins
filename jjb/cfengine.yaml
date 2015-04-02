@@ -210,7 +210,7 @@
         - pollscm: '@midnight'
 
       builders:
-        - shell: 'rm -rf ./* || true'
+        - shell: 'rm -f ./* || true'
         - shell: 'MULTITAR_SOURCE={multitar_source} /home/admin/cfengine-deb-jenkins/scripts/jdg-generate-source'
         - shell: |
             mkdir -p report
@@ -256,7 +256,7 @@
            echo "* Removing files workspace before copying artifacts from another project. *"
            rm -f ./* || true
         - copyartifact:
-            project: '{name}-source/distribution=$distribution,label=master'
+            project: '{name}-source/distribution=$distribution'
             filter: '*'
             which-build: upstream-build
             fallback-to-last-successful: true
