@@ -202,11 +202,7 @@
             type: user-defined
             name: distribution
             values: '{obj:distributions}'
-        - axis:
-            type: slave
-            name: label
-            values:
-              - master
+      node: master
       logrotate:
         numToKeep: '{logrotate_keep}'
       disabled: false
