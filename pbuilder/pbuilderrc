@@ -37,25 +37,36 @@ if [ -z "${METADIST}" ]; then
   echo Warning - no metadist set
 fi
 
-case "$METADIST" in
-  vivid|utopic|trusty|precise)
-    if [ "$ARCH"x = i386x -o "$ARCH"x = amd64x ]; then
-      MIRRORSITE="http://$UBUNTU_MIRROR/ubuntu/"
-    else
-      MIRRORSITE="http://ports.ubuntu.com/"
-    fi
-    # we need key id 40976EAF437D05B5
-    DEBOOTSTRAPOPTS=("${DEBOOTSTRAPOPTS[@]}" "--keyring=/usr/share/keyrings/ubuntu-archive-keyring.gpg")
-    # cowdancer is in universe
-    COMPONENTS="main universe"
+#eatmydata handling
+case "$DIST" in
+  jessie|sid|vivid)
+    # package install speedup - since jessie, the library moved dirs
+    EXTRAPACKAGES="eatmydata"
+    export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}/usr/lib/$(dpkg-architecture -qDEB_HOST_MULTIARCH)/libeatmydata.so"
+    ;;
+  utopic|trusty|precise)
     # package install speedup
     EXTRAPACKAGES="eatmydata"
-    # updates for... precise openssl and lucid libc6 bug
-    OTHERMIRROR="$OTHERMIRROR | deb $MIRRORSITE ${DIST}-updates $COMPONENTS"
     export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}/usr/lib/libeatmydata/libeatmydata.so"
     ;;
   lucid)
-    # lacks eatmydata package, so explicitely configure it
+    # lacks eatmydata package, so don't use it
+    ;;
+  squeeze|oldstable)
+    # lacks eatmydata package, so don't use it
+    # lacks debhelper 9, present in backports
+    OTHERMIRROR="$OTHERMIRROR | deb http://$DEBIAN_BACKPORTS_MIRROR/debian-backports/ squeeze-backports $COMPONENTS"
+    ;;
+  *)
+    # package install speedup
+    EXTRAPACKAGES="eatmydata"
+    export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}/usr/lib/libeatmydata/libeatmydata.so"
+    ;;
+esac
+
+#Ubuntu/Raspbian specific handling
+case "$METADIST" in
+  vivid|utopic|trusty|precise|lucid)
     if [ "$ARCH"x = i386x -o "$ARCH"x = amd64x ]; then
       MIRRORSITE="http://$UBUNTU_MIRROR/ubuntu/"
     else
@@ -65,38 +76,15 @@ case "$METADIST" in
     DEBOOTSTRAPOPTS=("${DEBOOTSTRAPOPTS[@]}" "--keyring=/usr/share/keyrings/ubuntu-archive-keyring.gpg")
     # cowdancer is in universe
     COMPONENTS="main universe"
-    # lucid-updates required for libc6 bug
-    OTHERMIRROR="$OTHERMIRROR | deb $MIRRORSITE lucid-updates $COMPONENTS"
+    # updates for... precise openssl and lucid libc6 bug
+    OTHERMIRROR="$OTHERMIRROR | deb $MIRRORSITE ${DIST}-updates $COMPONENTS"
     ;;
-  squeeze|oldstable)
-    # lacks eatmydata package, so explicitely configure it
-    MIRRORSITE="http://$DEBIAN_MIRROR/debian/"
-    # lacks debhelper 9, present in backports
-    OTHERMIRROR="$OTHERMIRROR | deb http://$DEBIAN_BACKPORTS_MIRROR/debian-backports/ squeeze-backports $COMPONENTS"
-    ;;
-  raspwheezy)
+  raspwheezy|raspjessie)
     MIRRORSITE="http://archive.raspbian.org/raspbian/"
-    # package install speedup
-    EXTRAPACKAGES="eatmydata"
     DEBOOTSTRAPOPTS=("${DEBOOTSTRAPOPTS[@]}" "--keyring=/usr/share/keyrings/raspbian-archive-keyring.gpg")
-    export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}/usr/lib/libeatmydata/libeatmydata.so"
-    export DIST=wheezy
-    export distribution=wheezy
-    ;;
-  raspjessie)
-    MIRRORSITE="http://archive.raspbian.org/raspbian/"
-    # package install speedup
-    EXTRAPACKAGES="eatmydata"
-    DEBOOTSTRAPOPTS=("${DEBOOTSTRAPOPTS[@]}" "--keyring=/usr/share/keyrings/raspbian-archive-keyring.gpg")
-    export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}/usr/lib/libeatmydata/libeatmydata.so"
-    export DIST=jessie
-    export distribution=jessie
     ;;
   *)
     MIRRORSITE="http://$DEBIAN_MIRROR/debian/"
-    # package install speedup
-    EXTRAPACKAGES="eatmydata"
     DEBOOTSTRAPOPTS=("${DEBOOTSTRAPOPTS[@]}" "--keyring=/usr/share/keyrings/debian-archive-keyring.gpg")
-    export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}/usr/lib/libeatmydata/libeatmydata.so"
     ;;
 esac
