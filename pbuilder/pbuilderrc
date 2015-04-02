@@ -42,7 +42,21 @@ case "$DIST" in
   jessie|sid|vivid)
     # package install speedup - since jessie, the library moved dirs
     EXTRAPACKAGES="eatmydata"
-    export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}/usr/lib/$(dpkg-architecture -qDEB_HOST_MULTIARCH)/libeatmydata.so"
+    case "$ARCH" in
+      i386)
+        DPKG_ARCH=i386-linux-gnu
+        ;;
+      amd64)
+        DPKG_ARCH=x86_64-linux-gnu
+        ;;
+      armel)
+        DPKG_ARCH=arm-linux-gnueabi
+        ;;
+      armhf)
+        DPKG_ARCH=arm-linux-gnueabihf
+        ;;
+    esac
+    export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}/usr/lib/${DPKG_ARCH}/libeatmydata.so"
     ;;
   utopic|trusty|precise)
     # package install speedup
